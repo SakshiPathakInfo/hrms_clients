@@ -5,6 +5,14 @@ import {defineConfig, loadEnv} from 'vite';
 
 export default defineConfig(({mode}) => {
   const env = loadEnv(mode, '.', '');
+  const backendUrl = env.BACKEND_URL || 'http://localhost:3001';
+  let backendHost = 'localhost';
+  try {
+    backendHost = new URL(backendUrl).hostname;
+  } catch (e) {
+    // fallback to localhost if parsing fails
+    backendHost = 'localhost';
+  }
   return {
     plugins: [react(), tailwindcss()],
     define: {
@@ -17,11 +25,13 @@ export default defineConfig(({mode}) => {
     },
     server: {
       // HMR is disabled in AI Studio via DISABLE_HMR env var.
-      // Do not modifyâfile watching is disabled to prevent flickering during agent edits.
+      // Do not modify—file watching is disabled to prevent flickering during agent edits.
+      // Allow the backend host (useful when proxying to a deployed backend hostname).
+      allowedHosts: [backendHost, 'localhost', '127.0.0.1'],
       hmr: process.env.DISABLE_HMR !== 'true',
       proxy: {
         '/api': {
-          target: env.BACKEND_URL || 'https://hrms-backend-3-tlnb.onrender.com',
+          target: env.BACKEND_URL || 'http://localhost:3001',
           changeOrigin: true,
           secure: false,
         },
