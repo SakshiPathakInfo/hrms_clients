@@ -126,13 +126,7 @@ The application communicates with a REST API hosted on Render:
 4. Test thoroughly
 5. Submit a pull request
 
-## License
 
-This project is licensed under the MIT License.
-- Indigo color scheme for primary elements
-- Responsive grid layouts
-- Hover effects and transitions
-- Status indicators with color coding
 
 ## 🤝 Contributing
 
@@ -142,10 +136,4 @@ This project is licensed under the MIT License.
 4. Test thoroughly
 5. Submit a pull request
 
-## 📄 License
 
-This project is licensed under the MIT License.
-
-## 📞 Support
-
-For questions or issues, please check the backend repository or create an issue in the project repository.
