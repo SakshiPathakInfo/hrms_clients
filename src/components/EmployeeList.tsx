@@ -24,7 +24,6 @@ export default function EmployeeList() {
     department: ''
   });
 
-  // State for real-time field errors
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
 
@@ -46,10 +45,8 @@ export default function EmployeeList() {
     fetchEmployees();
   }, []);
 
-  // --- Real-time Validation Logic ---
   const validateField = (name: string, value: string) => {
     let errorMsg = "";
-
     switch (name) {
       case 'employeeId':
         if (!value.trim()) errorMsg = "Employee ID is required";
@@ -69,33 +66,26 @@ export default function EmployeeList() {
       case 'department':
         if (!value.trim()) errorMsg = "Department is required";
         break;
-      default:
-        break;
     }
-
     setErrors(prev => ({ ...prev, [name]: errorMsg }));
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    
-    // Prevent starting space
     if (value.startsWith(' ')) return;
-
     setFormData(prev => ({ ...prev, [name]: value }));
     validateField(name, value);
   };
 
   const handleAddEmployee = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // Final check before submission
     const newErrors: Record<string, string> = {};
     Object.keys(formData).forEach(key => {
       validateField(key, formData[key as keyof typeof formData]);
     });
 
     if (Object.values(errors).some(err => err !== "") || Object.values(formData).some(val => val === "")) {
+      alert("Please fix the errors in the form before submitting.");
       return; 
     }
 
@@ -114,21 +104,31 @@ export default function EmployeeList() {
       setShowAddForm(false);
       setFormData({ employeeId: '', fullName: '', email: '', department: '' });
       setErrors({});
+      alert("Employee added successfully!");
     } catch (err: any) {
-      setError(err.message);
+      alert("Error: " + err.message);
     } finally {
       setSubmitting(false);
     }
   };
 
+  // --- Updated Delete Logic with Alerts ---
   const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure?')) return;
-    try {
-      const res = await fetch(`${BASE_URL}/${id}`, { method: 'DELETE' });
-      if (!res.ok) throw new Error('Delete failed');
-      setEmployees(employees.filter(emp => emp._id !== id));
-    } catch (err: any) {
-      alert(err.message);
+    const confirmDelete = window.confirm('Are you sure you want to delete this employee? This action cannot be undone.');
+    
+    if (confirmDelete) {
+      try {
+        const res = await fetch(`${BASE_URL}/${id}`, { method: 'DELETE' });
+        
+        if (!res.ok) throw new Error('Delete failed');
+
+        // Update local state
+        setEmployees(employees.filter(emp => emp._id !== id));
+        alert("Employee deleted successfully.");
+        
+      } catch (err: any) {
+        alert("Error deleting employee: " + err.message);
+      }
     }
   };
 
@@ -151,7 +151,6 @@ export default function EmployeeList() {
       {showAddForm && (
         <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6 mb-8">
           <form onSubmit={handleAddEmployee} className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
-            {/* Input Field Helper */}
             {[
               { label: 'Employee ID', name: 'employeeId', type: 'text', placeholder: 'EMP001' },
               { label: 'Full Name', name: 'fullName', type: 'text', placeholder: 'John Doe' },
@@ -189,7 +188,6 @@ export default function EmployeeList() {
         </div>
       )}
 
-      {/* Table Section */}
       {loading ? (
         <div className="flex justify-center p-10"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div></div>
       ) : employees.length === 0 ? (
