@@ -31,7 +31,7 @@ export default function Attendance() {
       try {
         setLoading(true);
         // Fetch employees
-        const empRes = await fetch('/api/employees');
+        const empRes = await fetch('${BASE_URL}/api/employees');
         if (!empRes.ok) throw new Error('Failed to fetch employees');
         const empData = await empRes.json();
         setEmployees(empData);
