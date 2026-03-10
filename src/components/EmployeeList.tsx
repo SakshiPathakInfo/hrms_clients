@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, Trash2, Mail, Briefcase, User, Users } from 'lucide-react';
 
+const BASE_URL = import.meta.env.BACKEND_URL;
+
 interface Employee {
   _id: string;
   employeeId: string;
@@ -28,7 +30,7 @@ export default function EmployeeList() {
   const fetchEmployees = async () => {
     try {
       setLoading(true);
-      const res = await fetch('/api/employees');
+      const res = await fetch('${BASE_URL}/api/employees');
       if (!res.ok) throw new Error('Failed to fetch employees');
       const data = await res.json();
       setEmployees(data);
@@ -53,7 +55,7 @@ export default function EmployeeList() {
     setSubmitting(true);
 
     try {
-      const res = await fetch('/api/employees', {
+      const res = await fetch('${BASE_URL}/api/employees', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
@@ -79,7 +81,7 @@ export default function EmployeeList() {
     if (!confirm('Are you sure you want to delete this employee?')) return;
     
     try {
-      const res = await fetch(`/api/employees/${id}`, { method: 'DELETE' });
+      const res = await fetch(`${BASE_URL}/api/employees/${id}`, { method: 'DELETE' });
       if (!res.ok) throw new Error('Failed to delete employee');
       
       setEmployees(employees.filter(emp => emp._id !== id));
