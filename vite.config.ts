@@ -27,7 +27,12 @@ export default defineConfig(({mode}) => {
       // HMR is disabled in AI Studio via DISABLE_HMR env var.
       // Do not modify—file watching is disabled to prevent flickering during agent edits.
       // Allow the backend host (useful when proxying to a deployed backend hostname).
-      allowedHosts: [backendHost, 'localhost', '127.0.0.1'],
+      allowedHosts: [
+        backendHost,
+        "localhost",
+        "127.0.0.1",
+        "hrms-backend-3-tlnb.onrender.com" // allow this host too
+      ],
       hmr: process.env.DISABLE_HMR !== 'true',
       proxy: {
         '/api': {
