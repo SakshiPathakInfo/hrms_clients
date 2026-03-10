@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { format } from 'date-fns';
 import { Calendar, CheckCircle, XCircle, Clock } from 'lucide-react';
 
+const BASE_URL = import.meta.env.BACKEND_URL;
+
 interface Employee {
   _id: string;
   employeeId: string;
@@ -35,7 +37,7 @@ export default function Attendance() {
         setEmployees(empData);
 
         // Fetch attendance for selected date
-        const attRes = await fetch(`/api/attendance?date=${date}`);
+        const attRes = await fetch(`${BASE_URL}/api/attendance?date=${date}`);
         if (!attRes.ok) throw new Error('Failed to fetch attendance');
         const attData: AttendanceRecord[] = await attRes.json();
         
@@ -58,7 +60,7 @@ export default function Attendance() {
   const handleMarkAttendance = async (employeeId: string, status: 'Present' | 'Absent') => {
     try {
       setSaving(employeeId);
-      const res = await fetch('/api/attendance', {
+      const res = await fetch('${BASE_URL}/api/attendance', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ employeeId, date, status })
