@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Users, UserCheck, UserX, HelpCircle } from 'lucide-react';
 
+const BASE_URL = import.meta.env.BACKEND_URL;
+
 interface DashboardSummary {
   totalEmployees: number;
   presentToday: number;
@@ -14,7 +16,7 @@ export default function Dashboard() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch('/api/dashboard')
+    fetch('${BASE_URL}/api/dashboard')
       .then(res => {
         if (!res.ok) throw new Error('Failed to fetch dashboard data');
         return res.json();
