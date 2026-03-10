@@ -31,13 +31,13 @@ export default function Attendance() {
       try {
         setLoading(true);
         // Fetch employees
-        const empRes = await fetch('${BASE_URL}/api/employees');
+        const empRes = await fetch(`${import.meta.env.BACKEND_URL}/api/employees`);
         if (!empRes.ok) throw new Error('Failed to fetch employees');
         const empData = await empRes.json();
         setEmployees(empData);
 
         // Fetch attendance for selected date
-        const attRes = await fetch(`${BASE_URL}/api/attendance?date=${date}`);
+        const attRes = await fetch(`${import.meta.env.BACKEND_URL}/api/attendance?date=${date}`);
         if (!attRes.ok) throw new Error('Failed to fetch attendance');
         const attData: AttendanceRecord[] = await attRes.json();
         
@@ -60,7 +60,7 @@ export default function Attendance() {
   const handleMarkAttendance = async (employeeId: string, status: 'Present' | 'Absent') => {
     try {
       setSaving(employeeId);
-      const res = await fetch('${BASE_URL}/api/attendance', {
+      const res = await fetch('${import.meta.env.BACKEND_URL}/api/attendance', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ employeeId, date, status })
