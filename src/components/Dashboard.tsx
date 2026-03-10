@@ -16,7 +16,7 @@ export default function Dashboard() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch('${BASE_URL}/api/dashboard')
+    fetch(`${import.meta.env.BACKEND_URL}/api/dashboard`)
       .then(res => {
         if (!res.ok) throw new Error('Failed to fetch dashboard data');
         return res.json();
