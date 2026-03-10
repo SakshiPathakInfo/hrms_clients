@@ -21,7 +21,7 @@ export default defineConfig(({mode}) => {
       hmr: process.env.DISABLE_HMR !== 'true',
       proxy: {
         '/api': {
-          target: env.BACKEND_URL || 'http://localhost:3001',
+          target: env.BACKEND_URL || 'https://hrms-backend-3-tlnb.onrender.com',
           changeOrigin: true,
           secure: false,
         },
